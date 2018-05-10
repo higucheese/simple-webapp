@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+    postgres:
+        image: postgres
+        env_file: .env
+
+    webapp:
+        build: .
+        ports:
+          - "80:80"
+        depends_on:
+          - "postgres"
+        stdin_open: true
+
