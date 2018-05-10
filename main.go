@@ -35,7 +35,6 @@ type Data struct {
 const (
     DB_USER = "postgres"
     DB_PASSWORD = "postgres"
-    DB_PORT = "5432"
     DB_NAME = "postgres"
     TABLE_NAME = "kadaidb"
 )
@@ -71,8 +70,11 @@ func getUser (w http.ResponseWriter, r *http.Request) (User, error) {
 
 func main() {
     var err error
-    dbinfo := fmt.Sprintf("postgres://%s:%s@postgres:%s/%s?sslmode=disable", DB_USER, DB_PASSWORD, DB_PORT, DB_NAME)
-    //dbinfo := fmt.Sprintf("postgres://%s:%s@localhost:%s/%s?sslmode=disable", DB_USER, DB_PASSWORD, DB_PORT, DB_NAME)
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "5432"
+    }
+    dbinfo := fmt.Sprintf("postgres://%s:%s@postgres:%s/%s?sslmode=disable", DB_USER, DB_PASSWORD, port, DB_NAME)
     url := os.Getenv("DATABASE_URL")
     if url != "" {
         dbinfo = url
