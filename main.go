@@ -35,6 +35,7 @@ type Data struct {
 const (
     DB_USER = "postgres"
     DB_PASSWORD = "postgres"
+    DB_PORT = "5432"
     DB_NAME = "postgres"
     TABLE_NAME = "kadaidb"
 )
@@ -70,11 +71,7 @@ func getUser (w http.ResponseWriter, r *http.Request) (User, error) {
 
 func main() {
     var err error
-    port := os.Getenv("PORT")
-    if port == "" {
-        port = "5432"
-    }
-    dbinfo := fmt.Sprintf("postgres://%s:%s@postgres:%s/%s?sslmode=disable", DB_USER, DB_PASSWORD, port, DB_NAME)
+    dbinfo := fmt.Sprintf("postgres://%s:%s@postgres:%s/%s?sslmode=disable", DB_USER, DB_PASSWORD, DB_PORT, DB_NAME)
     url := os.Getenv("DATABASE_URL")
     if url != "" {
         dbinfo = url
@@ -104,7 +101,12 @@ func main() {
     http.HandleFunc("/users", userRes)
     http.HandleFunc("/", helloRes)
 
-    log.Fatal(http.ListenAndServe(":80", nil))
+    port := os.Getenv("PORT")
+    if port == "" {
+        port = "8080"
+    }
+
+    log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
 
 func helloRes (w http.ResponseWriter, r *http.Request) {
