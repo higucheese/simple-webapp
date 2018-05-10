@@ -5,10 +5,10 @@ services:
         image: postgres
         env_file: .env
 
-    webapp:
+    web:
         build: .
         ports:
-          - "80:80"
+          - "8080:8080"
         depends_on:
           - "postgres"
         stdin_open: true
